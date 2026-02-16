@@ -2,12 +2,19 @@ import streamlit as st
 import google.generativeai as genai
 import requests
 import os
+import { Feather } from 'lucide-react';
 
 st.set_page_config(layout="wide")
 # --- CONFIGURATION & API SETUP ---
 st.set_page_config(
     page_title="HumanizeAI | Professional Text Refiner",
-    page_icon="✍️",
+    page_icon="const App = () => {
+  return (
+    <Feather />
+  );
+};
+
+export default App;",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
