@@ -8,15 +8,7 @@ st.set_page_config(layout="wide")
 # --- CONFIGURATION & API SETUP ---
 st.set_page_config(
     page_title="HumanizeAI | Professional Text Refiner",
-    page_icon="const App = () => {
-  return (
-    <Feather />
-  );
-};
-
-export default App;",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    page_icon="🖋️"
 )
 
 # Fetching keys from Streamlit Secrets (The secure way)
