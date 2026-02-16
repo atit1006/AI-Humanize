@@ -5,8 +5,6 @@ import os
 
 
 st.set_page_config(layout="wide")
-col1, col2 = st.columns(2, vertical_alignment="top")
-col1, col2 = st.columns([3, 2])
 with col1:
     with st.container(height=400): # Sets a fixed scrolling window for input
         user_input = st.text_area("Input", height=300)
