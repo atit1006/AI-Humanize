@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import requests
 import os
-import { Feather } from 'lucide-react';
+
 
 st.set_page_config(layout="wide")
 # --- CONFIGURATION & API SETUP ---
