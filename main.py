@@ -4,7 +4,7 @@ import requests
 import os
 
 
-st.set_page_config(layout="wide")
+
 with col1:
     with st.container(height=400): # Sets a fixed scrolling window for input
         user_input = st.text_area("Input", height=300)
@@ -121,6 +121,8 @@ def detect_ai_sapling(text):
         return None
 
 # --- UI COMPONENTS ---
+st.set_page_config(layout="wide")
+col1, col2 = st.columns(2, vertical_alignment="top")
 st.markdown("""
     <div class="nav-container">
         <div style="font-weight:800; font-size:1.5rem;">🖋️ Humanize<span style="color:#6366f1;">AI</span></div>
