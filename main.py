@@ -3,7 +3,8 @@ import google.generativeai as genai
 import requests
 import os
 
-
+st.set_page_config(layout="wide")
+col1, col2 = st.columns(2, vertical_alignment="top")
 
 with col1:
     with st.container(height=400): # Sets a fixed scrolling window for input
@@ -121,9 +122,8 @@ def detect_ai_sapling(text):
         return None
 
 # --- UI COMPONENTS ---
-st.set_page_config(layout="wide")
-col1, col2 = st.columns(2, vertical_alignment="top")
-col1, col2 = st.columns([3, 2])
+
+
 
 st.markdown("""
     <div class="nav-container">
