@@ -3,6 +3,7 @@ import google.generativeai as genai
 import requests
 import os
 
+st.set_page_config(layout="wide")
 # --- CONFIGURATION & API SETUP ---
 st.set_page_config(
     page_title="HumanizeAI | Professional Text Refiner",
