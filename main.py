@@ -133,7 +133,7 @@ mode = st.radio("Select Tool", ["Humanizer", "AI Detector"], horizontal=True, la
 
 if mode == "Humanizer":
     st.markdown('<h1 class="gradient-text">Refine AI into<br>Pure Human Voice</h1>', unsafe_allow_html=True)
-    col1, col2 = st.columns([2, 2])
+    col1, col2 = st.columns([2.5, 2])
     with col1: 
         with st.container(height=400):
             st.markdown('<div class="glass-card">', unsafe_allow_html=True)
