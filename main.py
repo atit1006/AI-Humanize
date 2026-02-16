@@ -43,9 +43,13 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.1);
         padding: 2rem;
         border-radius: 1.5rem;
-        min-height: 500px;
+        /* Change 1: Use min-height instead of height */
+        min-height: 500px; 
+        /* Change 2: Ensure content starts at the top */
         display: flex;
         flex-direction: column;
+        justify-content: flex-start !important;
+        align-items: stretch;
     }
 
     .gradient-text {
@@ -61,10 +65,8 @@ st.markdown("""
     }
 
     .stTextArea textarea {
-        background-color: transparent !important;
-        color: #e4e4e7 !important;
-        border: none !important;
-        font-size: 1rem !important;
+        margin-top: 0 !important;
+        flex-grow: 1;
     }
 
     .stButton button {
@@ -83,6 +85,10 @@ st.markdown("""
         padding: 1rem 0;
         border-bottom: 1px solid rgba(255,255,255,0.05);
         margin-bottom: 3rem;
+    }
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 0rem !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -135,11 +141,11 @@ if mode == "Humanizer":
     st.markdown('<h1 class="gradient-text">Refine AI into<br>Pure Human Voice</h1>', unsafe_allow_html=True)
     col1, col2 = st.columns([2.5, 2])
     with col1: 
-        with st.container(height=400):
             st.markdown('<div class="glass-card">', unsafe_allow_html=True)
             st.markdown('<span style="color: #d4d4d8;">Raw Input</span>', unsafe_allow_html=True)
             
-        user_input = st.text_area("input", placeholder="Paste AI content here...", height=300, label_visibility="collapsed")
+        user_input = st.text_area("Label", placeholder="Paste AI content here...", height=300, label_visibility="collapsed")
+
         st.markdown('</div>', unsafe_allow_html=True)
         
         if st.button("Humanize Content"):
@@ -147,6 +153,7 @@ if mode == "Humanizer":
         st.markdown('</div>', unsafe_allow_html=True)
     with col2:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+        
         if st.session_state.humanized_output:
             st.write(st.session_state.humanized_output)
             st.download_button("Download", st.session_state.humanized_output)
