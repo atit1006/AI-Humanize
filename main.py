@@ -137,7 +137,11 @@ if mode == "Humanizer":
     with col1: 
         with st.container(height=400):
             st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+            st.markdown('<span style="color: #d4d4d8;">Raw Input</span>', unsafe_allow_html=True)
+            
         user_input = st.text_area("input", placeholder="Paste AI content here...", height=300, label_visibility="collapsed")
+        st.markdown('</div>', unsafe_allow_html=True)
+        
         if st.button("Humanize Content"):
             st.session_state.humanized_output = humanize_text(user_input)
         st.markdown('</div>', unsafe_allow_html=True)
