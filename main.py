@@ -144,7 +144,7 @@ if mode == "Humanizer":
             st.markdown('<div class="glass-card">', unsafe_allow_html=True)
             st.markdown('<span style="color: #d4d4d8;">Raw Input</span>', unsafe_allow_html=True)
             
-        user_input = st.text_area("Input", height=300)
+        user_input = st.text_area("input", placeholder="Paste AI content here...", height=350, label_visibility="collapsed")
 
         st.markdown('</div>', unsafe_allow_html=True)
         
