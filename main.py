@@ -7,7 +7,7 @@ import os
 st.set_page_config(layout="wide")
 # --- CONFIGURATION & API SETUP ---
 st.set_page_config(
-    page_title="HumanizeAI | Professional Text Refiner",
+    page_title="🖋️HumanizeAI | Professional Text Refiner",
     page_icon="🖋️"
 )
 
