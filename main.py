@@ -120,7 +120,7 @@ def detect_ai_sapling(text):
 # --- UI COMPONENTS ---
 st.markdown("""
     <div class="nav-container">
-        <div style="font-weight:800; font-size:1.5rem;">✍️ Humanize<span style="color:#6366f1;">AI</span></div>
+        <div style="font-weight:800; font-size:1.5rem;">🖋️ Humanize<span style="color:#6366f1;">AI</span></div>
         <div style="color:#71717a;">v4.0 Professional</div>
     </div>
 """, unsafe_allow_html=True)
