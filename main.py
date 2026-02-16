@@ -123,6 +123,8 @@ def detect_ai_sapling(text):
 # --- UI COMPONENTS ---
 st.set_page_config(layout="wide")
 col1, col2 = st.columns(2, vertical_alignment="top")
+col1, col2 = st.columns([3, 2])
+
 st.markdown("""
     <div class="nav-container">
         <div style="font-weight:800; font-size:1.5rem;">🖋️ Humanize<span style="color:#6366f1;">AI</span></div>
