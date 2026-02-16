@@ -3,8 +3,6 @@ import google.generativeai as genai
 import requests
 import os
 
-st.set_page_config(layout="wide")
-col1, col2 = st.columns(2, vertical_alignment="top")
 
 with col1:
     with st.container(height=400): # Sets a fixed scrolling window for input
