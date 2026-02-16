@@ -142,7 +142,7 @@ if mode == "Humanizer":
     col1, col2 = st.columns([2.5, 2])
     with col1: 
             st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-            st.markdown('<span style="color: #d4d4d8;">Raw Input</span>', unsafe_allow_html=True)
+            
             
         user_input = st.text_area("input", placeholder="Paste AI content here...", height=350, label_visibility="collapsed")
 
