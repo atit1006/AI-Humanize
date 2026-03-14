@@ -8,7 +8,7 @@ col1, col2 = st.columns(2, vertical_alignment="top")
 
 # --- CONFIGURATION & API SETUP ---
 st.set_page_config(
-    page_title="HumanizeAI | Professional Text Refiner",
+    page_title="Artificial AI | Professional Text Refiner",
     page_icon="🖋️"
 )
 
