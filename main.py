@@ -3,13 +3,13 @@ import google.generativeai as genai
 import requests
 import os
 
-st.set_page_config(layout="wide")
 col1, col2 = st.columns(2, vertical_alignment="top")
 
 # --- CONFIGURATION & API SETUP ---
 st.set_page_config(
     page_title="Artificial AI | Professional Text Refiner",
-    page_icon="🖋️"
+    page_icon="🖋️",
+    layout="wide",
 )
 
 # Fetching keys from Streamlit Secrets (The secure way)
@@ -136,24 +136,36 @@ mode = st.radio("Select Tool", ["Humanizer", "AI Detector"], horizontal=True, la
 
 if mode == "Humanizer":
     st.markdown('<h1 class="gradient-text">Refine AI into<br>Pure Human Voice</h1>', unsafe_allow_html=True)
+
     col1, col2 = st.columns([2.5, 2])
-               st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-            st.markdown('<span style="color: #d4d4d8;">Raw Input</span>', unsafe_allow_html=True)
-            
-        user_input = st.text_area("input", placeholder="Paste AI content here...", height=350, label_visibility="collapsed")
-        
+
+    with col1:
+        st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+        st.markdown('<span style="color: #d4d4d8;">Raw Input</span>', unsafe_allow_html=True)
+
+        user_input = st.text_area(
+            "input",
+            placeholder="Paste AI content here...",
+            height=350,
+            label_visibility="collapsed"
+        )
+
         if st.button("Humanize Content"):
             st.session_state.humanized_output = humanize_text(user_input)
+
         st.markdown('</div>', unsafe_allow_html=True)
+
     with col2:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-        
+
         if st.session_state.humanized_output:
             st.write(st.session_state.humanized_output)
             st.download_button("Download", st.session_state.humanized_output)
         else:
             st.write("Result will appear here...")
+
         st.markdown('</div>', unsafe_allow_html=True)
+
 
 elif mode == "AI Detector":
     st.markdown('<h1 class="gradient-text">Expose the<br>Silicon Patterns</h1>', unsafe_allow_html=True)
