@@ -171,6 +171,7 @@ def inject_styles() -> None:
             border-radius: 18px !important;
             font-size: 1rem !important;
             min-height: 560px !important;
+            min-height: 330px !important;
         }
 
         .stTextInput input {
@@ -220,6 +221,7 @@ def inject_styles() -> None:
             background: rgba(10, 6, 21, 0.65);
             border: 1px solid rgba(202, 178, 255, 0.14);
             min-height: 560px;
+            min-height: 330px;
             white-space: pre-wrap;
             line-height: 1.65;
         }
@@ -448,6 +450,7 @@ if mode == "Humanizer":
     col1, col2 = st.columns([1.2, 1])
 
     with col1:
+        st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-label">Original text</div>', unsafe_allow_html=True)
         st.markdown('<div class="helper-text">Paste AI-generated content, ad copy, blog drafts, or product text here.</div>', unsafe_allow_html=True)
 
@@ -475,7 +478,22 @@ if mode == "Humanizer":
                 else:
                     st.session_state.humanized_output = clean_text_locally(user_input)
 
+        action_col1, action_col2 = st.columns(2)
+        with action_col1:
+            if st.button("Humanize Content"):
+                if not user_input.strip():
+                    st.warning("Please paste some text before running the humanizer.")
+                else:
+                    st.session_state.humanized_output = humanize_text(user_input, tone, audience, preserve_length)
+        with action_col2:
+            if st.button("Quick Clean"):
+                if not user_input.strip():
+                    st.warning("Please paste some text before running Quick Clean.")
+                else:
+                    st.session_state.humanized_output = clean_text_locally(user_input)
+
     with col2:
+        st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-label">Refined output</div>', unsafe_allow_html=True)
         st.markdown('<div class="helper-text">Use AI Humanizer for premium rewriting or Quick Clean for a local polish pass.</div>', unsafe_allow_html=True)
 
@@ -493,12 +511,16 @@ if mode == "Humanizer":
         else:
             st.markdown('<div class="result-box">Your improved text will appear here after you run the humanizer.</div>', unsafe_allow_html=True)
 
+        st.markdown('</div>', unsafe_allow_html=True)
+
 elif mode == "AI Detector":
     st.markdown("### AI Detector")
     detector_col1, detector_col2 = st.columns([1.1, 0.9])
     with detector_col1:
         st.markdown('<div class="section-label">Analyze a passage</div>', unsafe_allow_html=True)
         st.markdown('<div class="helper-text">Paste the text you want to review and run the detector.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+        st.markdown('<div class="section-label">Analyze a passage</div>', unsafe_allow_html=True)
         detect_input = st.text_area(
             "Detector text",
             placeholder="Paste text to analyze for AI-like patterns...",
@@ -513,6 +535,11 @@ elif mode == "AI Detector":
     with detector_col2:
         st.markdown('<div class="section-label">Detection result</div>', unsafe_allow_html=True)
         st.markdown('<div class="helper-text">View the AI probability, label, and detector notes here.</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with detector_col2:
+        st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+        st.markdown('<div class="section-label">Detection result</div>', unsafe_allow_html=True)
         result = st.session_state.detection_result
         if result:
             if result["score"] is not None:
@@ -521,6 +548,7 @@ elif mode == "AI Detector":
             st.caption(result["detail"])
         else:
             st.markdown('<div class="result-box">Your AI detection result will appear here.</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="footer-note">Royal Humanize AI • Premium UX refresh for a more launch-ready experience.</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
