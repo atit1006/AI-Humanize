@@ -293,6 +293,24 @@ def clean_text_locally(text: str) -> str:
     return cleaned
 
 
+
+
+def estimate_local_ai_likelihood(text: str) -> dict:
+    words = text.split()
+    if not words:
+        return {"score": 0.0, "label": "Insufficient text", "detail": "Please provide more text to analyze."}
+
+    avg_word_len = sum(len(w) for w in words) / max(len(words), 1)
+    long_sentence_bias = 12 if len(text) > 700 else 0
+    buzzwords = ["furthermore", "moreover", "in conclusion", "delve", "landscape", "leveraging", "seamless"]
+    buzzword_hits = sum(1 for w in buzzwords if w in text.lower())
+    punctuation_density = sum(text.count(ch) for ch in ";:")
+
+    score = min(95.0, max(5.0, 20 + avg_word_len * 6 + long_sentence_bias + buzzword_hits * 8 + punctuation_density * 1.2))
+    label = "AI-Generated" if score > 70 else "Mixed/Unclear" if score > 30 else "Human-Written"
+    detail = "Local heuristic estimate used because Sapling API key is missing or invalid."
+    return {"score": round(score, 1), "label": label, "detail": detail}
+
 def build_humanize_prompt(text: str, tone: str, audience: str, preserve_length: bool) -> str:
     length_rule = "Keep the length close to the original." if preserve_length else "You may slightly shorten the text for better readability."
     return (
@@ -305,10 +323,11 @@ def build_humanize_prompt(text: str, tone: str, audience: str, preserve_length: 
 
 
 def humanize_text(text: str, tone: str, audience: str, preserve_length: bool) -> str:
+    local_version = clean_text_locally(text)
     if not GEMINI_API_KEY:
         return (
-            "Add a Gemini API key in the sidebar, Streamlit secrets, or environment variables to unlock the AI humanizer.\n\n"
-            "Tip: The app is launch-ready, but this feature requires your own key for production use."
+            "⚠️ Gemini API key not configured, so Local Humanizer mode is being used.\n\n"
+            f"{local_version}"
         )
 
     prompt = build_humanize_prompt(text, tone, audience, preserve_length)
@@ -316,18 +335,17 @@ def humanize_text(text: str, tone: str, audience: str, preserve_length: bool) ->
         model = genai.GenerativeModel("gemini-1.5-flash")
         response = model.generate_content(prompt)
         return response.text.strip()
-    except Exception as exc:
-        return f"Humanizer error: {exc}"
+    except Exception:
+        return (
+            "⚠️ Gemini key appears invalid or unavailable right now, so Local Humanizer mode is being used.\n\n"
+            f"{local_version}"
+        )
 
 
 
 def detect_ai_sapling(text: str) -> Optional[dict]:
     if not SAPLING_API_KEY:
-        return {
-            "score": None,
-            "label": "API key needed",
-            "detail": "Add a Sapling API key in the sidebar, Streamlit secrets, or environment variables to run AI detection.",
-        }
+        return estimate_local_ai_likelihood(text)
 
     url = "https://api.sapling.ai/api/v1/aidetector"
     payload = {"key": SAPLING_API_KEY, "text": text}
@@ -339,12 +357,8 @@ def detect_ai_sapling(text: str) -> Optional[dict]:
         label = "AI-Generated" if score > 70 else "Mixed/Unclear" if score > 30 else "Human-Written"
         detail = "Higher scores suggest the text follows patterns often seen in machine-generated writing."
         return {"score": score, "label": label, "detail": detail}
-    except requests.RequestException as exc:
-        return {
-            "score": None,
-            "label": "Detection unavailable",
-            "detail": f"Sapling request failed: {exc}",
-        }
+    except requests.RequestException:
+        return estimate_local_ai_likelihood(text)
 
 
 
@@ -379,8 +393,8 @@ with st.sidebar:
         help="Optional here if you already store it in Streamlit secrets or environment variables.",
     )
 
-    gemini_ready = "Ready" if get_secret_value("GEMINI_API_KEY") else "Missing"
-    sapling_ready = "Ready" if get_secret_value("SAPLING_API_KEY") else "Missing"
+    gemini_ready = "Ready" if get_secret_value("GEMINI_API_KEY") else "Local mode"
+    sapling_ready = "Ready" if get_secret_value("SAPLING_API_KEY") else "Local mode"
     render_metric_card("Gemini", gemini_ready)
     render_metric_card("Sapling", sapling_ready)
 
@@ -395,8 +409,8 @@ with st.sidebar:
         """
         <div class="info-card">
             <strong>Launch checklist</strong><br>
-            • Add your production API keys.<br>
-            • Verify your final copy style.<br>
+            • Add your production API keys for best results.<br>
+            • Local fallback stays available if keys fail.<br>
             • Deploy on Streamlit Community Cloud or your preferred host.
         </div>
         """,

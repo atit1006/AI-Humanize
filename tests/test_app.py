@@ -45,8 +45,8 @@ class RoyalHumanizeAppTests(unittest.TestCase):
         app.button[0].click()
         app.run()
 
-        self.assertEqual(app.subheader[0].value, "API key needed")
-        self.assertTrue(any("Sapling API key" in cap.value for cap in app.caption))
+        self.assertIn(app.subheader[0].value, ["AI-Generated", "Mixed/Unclear", "Human-Written"])
+        self.assertTrue(any("Local heuristic estimate" in cap.value for cap in app.caption))
 
 
 if __name__ == "__main__":
