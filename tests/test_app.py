@@ -23,6 +23,7 @@ class RoyalHumanizeAppTests(unittest.TestCase):
         self.assertEqual(app.radio[0].value, "Humanizer")
         self.assertEqual(len(app.text_input), 2)
         self.assertGreaterEqual(len(app.text_area), 1)
+        self.assertFalse(any(block.value.strip() == '<div class="glass-card">' for block in app.markdown))
 
     def test_quick_clean_generates_refined_output(self):
         app = AppTest.from_file("main.py")
