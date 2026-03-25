@@ -350,6 +350,9 @@ def detect_ai_sapling(text: str) -> Optional[dict]:
         return estimate_local_ai_likelihood(text)
 
 
+with st.sidebar:
+    st.markdown("## 👑 Launch Control")
+    st.caption("Configure your app for demos, staging, or production.")
 
 def quality_snapshot(text: str) -> dict:
     words = text.split()
