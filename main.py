@@ -8,8 +8,8 @@ import streamlit as st
 from streamlit.errors import StreamlitSecretNotFoundError
 
 st.set_page_config(
-    page_title="Royal Humanize AI | Premium Text Refinery",
-    page_icon="👑",
+    page_title="Humanize AI | Premium Text Refinery",
+    page_icon="✨",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -78,7 +78,18 @@ def inject_styles() -> None:
         .hero-card {
             padding: 1.75rem 1.75rem 1.25rem 1.75rem;
             margin-bottom: 1.25rem;
-            background: linear-gradient(135deg, rgba(8, 24, 40, 0.94), rgba(5, 15, 27, 0.9));
+            border: 1px solid rgba(54, 200, 255, 0.36);
+            background:
+                radial-gradient(circle at 92% 8%, rgba(255, 92, 43, 0.20), transparent 30%),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(27, 136, 184, 0.05) 0,
+                    rgba(27, 136, 184, 0.05) 26px,
+                    rgba(4, 17, 28, 0.0) 26px,
+                    rgba(4, 17, 28, 0.0) 92px
+                ),
+                linear-gradient(110deg, rgba(6, 22, 38, 0.96), rgba(3, 14, 25, 0.92));
+            box-shadow: 0 0 0 1px rgba(37, 169, 223, 0.15), 0 18px 65px rgba(0, 0, 0, 0.45);
         }
 
         .glass-card {
@@ -93,11 +104,11 @@ def inject_styles() -> None:
 
         .brand-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
-            border-bottom: 1px solid rgba(202, 178, 255, 0.12);
+            border-bottom: 1px solid rgba(54, 200, 255, 0.2);
             padding-bottom: 1rem;
         }
 
@@ -109,15 +120,6 @@ def inject_styles() -> None:
 
         .brand-mark span {
             color: var(--gold);
-        }
-
-        .brand-badge {
-            font-size: 0.82rem;
-            color: var(--gold);
-            border: 1px solid rgba(32,185,255,0.28);
-            padding: 0.35rem 0.7rem;
-            border-radius: 999px;
-            background: rgba(255,138,61,0.12);
         }
 
         .hero-title {
@@ -136,19 +138,6 @@ def inject_styles() -> None:
             font-size: 1.04rem;
             margin-top: 0.8rem;
             max-width: 54rem;
-        }
-
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            margin-top: 1rem;
-            padding: 0.45rem 0.8rem;
-            border-radius: 999px;
-            border: 1px solid rgba(255,138,61,0.28);
-            background: rgba(255,138,61,0.12);
-            color: #dff7ff;
-            font-size: 0.92rem;
         }
 
         .section-label {
@@ -361,6 +350,21 @@ def detect_ai_sapling(text: str) -> Optional[dict]:
         return estimate_local_ai_likelihood(text)
 
 
+with st.sidebar:
+    st.markdown("## 👑 Launch Control")
+    st.caption("Configure your app for demos, staging, or production.")
+
+def quality_snapshot(text: str) -> dict:
+    words = text.split()
+    sentences = [chunk.strip() for chunk in re.split(r"[.!?]+", text) if chunk.strip()]
+    sentence_count = len(sentences)
+    avg_sentence_len = round(len(words) / sentence_count, 1) if sentence_count else 0.0
+    return {
+        "words": len(words),
+        "sentences": sentence_count,
+        "avg_sentence_len": avg_sentence_len,
+    }
+
 
 def render_metric_card(label: str, value: str) -> None:
     st.markdown(
@@ -375,7 +379,7 @@ def render_metric_card(label: str, value: str) -> None:
 
 
 with st.sidebar:
-    st.markdown("## 👑 Launch Control")
+    st.markdown("## Launch Control")
     st.caption("Configure your app for demos, staging, or production.")
 
     st.session_state.gemini_api_key = st.text_input(
@@ -405,13 +409,19 @@ with st.sidebar:
             "It saves time, increases output, and provides better consistency for growing brands."
         )
 
+    if st.button("Clear app state"):
+        st.session_state.sample_text = ""
+        st.session_state.humanized_output = ""
+        st.session_state.detection_result = None
+
     st.markdown(
         """
         <div class="info-card">
             <strong>Launch checklist</strong><br>
             • Add your production API keys for best results.<br>
             • Local fallback stays available if keys fail.<br>
-            • Deploy on Streamlit Community Cloud or your preferred host.
+            • Deploy on Streamlit Community Cloud or your preferred host.<br>
+            • Tip: remove demo text before sharing screenshots.
         </div>
         """,
         unsafe_allow_html=True,
@@ -422,15 +432,14 @@ st.markdown(
     """
     <div class="hero-card">
         <div class="brand-row">
-            <div class="brand-mark">👑 Royal <span>Humanize AI</span></div>
-            <div class="brand-badge">Launch-ready copy studio</div>
+            <div class="brand-mark"><span>Humanize AI</span></div>
+            
         </div>
-        <h1 class="hero-title">Make AI text feel premium,<br>credible, and deeply human.</h1>
+        <h1 class="hero-title">Humanize AI text<br>with natural clarity.</h1>
         <div class="hero-subtitle">
-            Refine machine-written drafts into polished messaging for websites, emails, proposals, and product launches.
-            Built with a royal palette, faster setup, and clearer controls for real-world use.
+            Transform AI-generated drafts into clear, human-sounding writing for websites, emails, and product content.
+            Use API keys for advanced output, or continue with local fallback mode anytime.
         </div>
-        <div class="status-pill">● Bring your own API keys, or preview the full interface now and connect production services later.</div>
     </div>
     """,
     unsafe_allow_html=True,
@@ -495,13 +504,19 @@ if mode == "Humanizer":
 
         output_text = st.session_state.humanized_output
         if output_text:
-            output_word_count = len(output_text.split())
-            render_metric_card("Output words", str(output_word_count))
+            output_snapshot = quality_snapshot(output_text)
+            input_snapshot = quality_snapshot(user_input) if user_input else {"words": 0, "sentences": 0, "avg_sentence_len": 0.0}
+            render_metric_card("Output words", str(output_snapshot["words"]))
+            compare_col1, compare_col2 = st.columns(2)
+            with compare_col1:
+                st.metric("Sentences", output_snapshot["sentences"], delta=output_snapshot["sentences"] - input_snapshot["sentences"])
+            with compare_col2:
+                st.metric("Avg sentence length", output_snapshot["avg_sentence_len"], delta=round(output_snapshot["avg_sentence_len"] - input_snapshot["avg_sentence_len"], 1))
             st.markdown(f'<div class="result-box">{output_text}</div>', unsafe_allow_html=True)
             st.download_button(
                 "Download refined text",
                 data=output_text,
-                file_name="royal-humanized-text.txt",
+                file_name="humanize-ai-output.txt",
                 mime="text/plain",
             )
         else:
@@ -536,5 +551,5 @@ elif mode == "AI Detector":
         else:
             st.markdown('<div class="result-box">Your AI detection result will appear here.</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="footer-note">Royal Humanize AI • Premium UX refresh for a more launch-ready experience.</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer-note">Humanize AI • Premium UX refresh for a more launch-ready experience.</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
